@@ -114,20 +114,21 @@ get_returns <- (function() {
     Sigma <- cov(data)
     n     <- length(mu)
     
-    # Tüm kombinasyonları matris olarak oluştur
-    W <- expand.grid(rep(list(grid), n - 1))  # son ağırlığı çıkarıyoruz
-    W$w_last <- 1 - rowSums(W)                # son ağırlık: 1 - diğerlerinin toplamı
-    W <- W[W$w_last >= 0, ]                   # geçerli portföyler (ağırlıklar >= 0)
+    # Combination Matrix
+    W <- expand.grid(rep(list(grid), n - 1))
+    W$w_last <- 1 - rowSums(W)
+    W <- W[W$w_last >= 0, ]
     W <- as.matrix(W)
     
-    # Tek döngüde risk ve getiri hesapla (vektörize)
+    # Risk-Return Vectors
     port_rets  <- as.vector(W %*% mu)
     port_risks <- sqrt(rowSums((W %*% Sigma) * W))
     
-    # Grafik
+    # Graph
     plot(port_risks, port_rets,
          col = rgb(0, 0, 1, 0.3), pch = 16,
-         xlab = "Risk (σ)", ylab = "Beklenen Getiri",
-         main = "Portfolio Risk-Return Space (Single Loop Version)")
+         xlab = "Risk (σ)", 
+         ylab = "Expected Return (μ)",
+         main = "Portfolio Risk-Return Space")
     grid()
   })(get_returns, 0.01)
