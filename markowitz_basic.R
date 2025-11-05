@@ -34,16 +34,19 @@ get_returns <- (function() {
 
 
 
+# --- Markowitz Optimization ---
 
-(function(data, r, step) {
+(function(data, rf = 0, step = 0.01) {
   
-  l <- length(colnames(data))
+  # Risk-free rate (adjusted to scale)
+  rf
+  
   # --- Expected returns and covariance ---
   mu    <- colMeans(data)
   Sigma <- cov(data)
-  rf    <- r
   n     <- ncol(data)
   grid  <- seq(0, 1, by = step)
+  
   
   # --- Generate all possible weight combinations dynamically ---
   W <- expand.grid(rep(list(grid), n))
@@ -83,6 +86,8 @@ get_returns <- (function() {
     }
   }
   
+  l <- length(colnames(data))
+  
   # --- Results ---
   results_df <- data.frame(
     Type   = c("Max Sharpe", "Min Risk"),
@@ -99,7 +104,7 @@ get_returns <- (function() {
   
   list(results_df = results_df, weights = as.data.frame(weighted_df))
   
-})(get_returns, r = 0, step=0.01)
+})(get_returns, r = 0, step = 0.01)
 
 
 
@@ -107,7 +112,7 @@ get_returns <- (function() {
 
 # --- Graph ---
 
-(function(data, step) {
+(function(data, step = 0.01) {
   
 # Step size
     grid <- seq(0, 1, by = step)
