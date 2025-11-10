@@ -34,7 +34,7 @@ get_returns <- (function() {
 
 
 
-# --- Markowitz Optimization ---
+# --- Portfolio Optimization ---
 
 (function(data, rf = 0, step = 0.01) {
   
@@ -49,9 +49,7 @@ get_returns <- (function() {
   
   
   # --- Generate all possible weight combinations dynamically ---
-  W <- expand.grid(rep(list(grid), n))
-  W <- W[rowSums(W) == 1, , drop = FALSE]
-  W <- as.matrix(W)
+  W <- as.matrix(subset(expand.grid(rep(list(grid), n)), rowSums(.) == 1))
   
   # --- Containers for results ---
   best_sharpe <- -Inf
@@ -133,8 +131,8 @@ get_returns <- (function() {
     # Graph
     plot(port_risks, port_rets,
          col = rgb(0, 0, 1, 0.3), pch = 16,
-         xlab = "Risk (σ)", 
-         ylab = "Expected Return (μ)",
+         xlab = "Risk (O)", 
+         ylab = "Expected Return (N<)",
          main = "Portfolio Risk-Return Space")
     grid()
   })(get_returns, 0.01)
